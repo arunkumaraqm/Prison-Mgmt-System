@@ -1,0 +1,12 @@
+{% if new_prisoners_list %}
+<ul> {% for p in new_prisoners_list %}
+	<li><a href="{% url 'nowhere.com' %}">
+		{{p.name}}
+	</a></li>
+	{% endfor %}
+</ul>
+
+{% else %}
+	<p>No prisoners currently in prison.</p>
+
+{% endif %}
