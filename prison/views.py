@@ -1,15 +1,78 @@
 from django.http import HttpResponse, HttpResponseRedirect
 from django.views import generic
 from django.urls import reverse
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, redirect, get_object_or_404
 from .models import Prisoner as Pr
+from .forms import PrisonerForm
+from accounts.decorators import my_login_required, allowed_users
 
-class IndexView(generic.ListView):
-	template_name = 'prison/index.html'
-	context_object_name = 'new_prisoners_list'
+@my_login_required
+@allowed_users(['DataManager', 'Police'])
+def index(request):
+	prisoners = Pr.objects.all()
+	return render(
+		request, 
+		"prison/index.html", 
+		{
+			'new_prisoners_list': Pr.objects.order_by('start_date')[:10]
+		}
+	)
 
-	def get_queryset(self):
-		return Pr.objects.order_by('start_date')[:10]
+@my_login_required
+@allowed_users(['DataManager'])
+def show(request):
+	prisoners = Pr.objects.all()
+	return render(
+		request, 
+		"prison/show.html", 
+		{'prisoners': prisoners}
+		)
+
+@my_login_required
+@allowed_users(['DataManager'])
+def insert(request):
+	if request.method == "GET":
+		form = PrisonerForm()
+
+	elif request.method == "POST":
+		form = PrisonerForm(request.POST)
+		if form.is_valid():
+			form.save() 
+			return redirect(show)
+
+	return render(
+		request,
+		'prison/insert.html',
+		{'form': form}
+		)
+
+@my_login_required
+@allowed_users(['DataManager'])
+def destroy(request, id):
+	# If you go to the url /prison/destroy/10, then
+	# the prisoner with id 10 will be deleted
+	# and you will be redirected to /prison/show
+	prisoner = get_object_or_404(Pr, id=id)
+	prisoner.delete()
+	return redirect(show)
+
+@my_login_required
+@allowed_users(['DataManager'])
+def edit(request, id):
+	prisoner = get_object_or_404(Pr, id=id)
+	form = PrisonerForm(request.POST or None, instance = prisoner)
+
+	if request.method == "POST":
+		print("LOG: ", prisoner.start_date)
+		if form.is_valid():
+			form.save() 
+			return redirect(show)
+
+	return render(
+		request,
+		'prison/edit.html',
+		{'prisoner': prisoner, 'form': form}
+		)
 
 # class DetailView(generic.DetailView):
 # 	model = Pr

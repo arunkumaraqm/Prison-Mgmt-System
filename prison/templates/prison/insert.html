@@ -1,0 +1,10 @@
+<head>  
+    <title>Insert</title>  
+</head>   
+<body>  
+<form method="POST" class="post-form" action="insert">  
+    {% csrf_token %}  
+    {{form.as_p}}
+    <input type="submit" value="Submit">
+</form>  
+</body>

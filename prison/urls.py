@@ -3,7 +3,11 @@ from . import views
 
 urlpatterns = [
 	#path(route, view, kwargs, name)
-	path('', views.IndexView.as_view(), name = "Index"),
+	path('', views.index, name = "Index"),
+	path('show', views.show, name = "Show"),
+	path('insert', views.insert, name = "Insert"),
+	path('destroy/<int:id>', views.destroy),
+	path('edit/<int:id>', views.edit),
 	# path('<int:pk>/', views.DetailView.as_view(), name = "detail"),
 	# path('<int:pk>/results/', views.ResultsView.as_view(), name = "results"),
 	# path('<int:question_id>/vote/', views.vote, name = "vote"),

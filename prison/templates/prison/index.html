@@ -1,7 +1,7 @@
 {% if new_prisoners_list %}
 <ul> {% for p in new_prisoners_list %}
-	<li><a href="{% url 'nowhere.com' %}">
-		{{p.name}}
+	<li><a href="{% url 'Index' %}">
+		{{p.name}}, {{p.start_date}}
 	</a></li>
 	{% endfor %}
 </ul>

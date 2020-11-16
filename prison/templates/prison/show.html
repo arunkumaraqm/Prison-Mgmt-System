@@ -1,0 +1,33 @@
+<head>
+	<title>Prisoner records</title>
+</head>
+<body>
+	{% if prisoners %}
+		<table>
+		<tr>
+			<th>Name</th>
+			<th>Start Date</th>
+			<th>Edit</th>
+			<th>Destroy</th>
+		</tr>
+		{% for prisoner in prisoners %}
+		<tr>
+			<td>{{prisoner.name}}</td>
+			<td>{{prisoner.start_date}}</td>
+			<td>
+				<a href="/prison/edit/{{ prisoner.id }}">
+					Edit
+				</a>
+			</td>
+			<td>
+				<a href="/prison/destroy/{{ prisoner.id }}">
+					Destroy
+				</a>
+			</td>
+		</tr>
+		{% endfor %}
+		</table>
+	{% else %}
+		<p>No prisoners currently.</p>
+	{% endif %}
+</body>
