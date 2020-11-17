@@ -3,7 +3,8 @@ from . import views
 
 urlpatterns = [
 	#path(route, view, kwargs, name)
-	path('', views.index, name = "Index"),
+	path('', views.index, name = "Home"),
+	path('plainshow', views.plainshow, name = "Show"),
 	path('show', views.show, name = "Show"),
 	path('insert', views.insert, name = "Insert"),
 	path('destroy/<int:id>', views.destroy),

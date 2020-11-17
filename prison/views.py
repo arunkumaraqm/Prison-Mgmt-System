@@ -7,16 +7,31 @@ from .forms import PrisonerForm
 from accounts.decorators import my_login_required, allowed_users
 
 @my_login_required
-@allowed_users(['DataManager', 'Police'])
 def index(request):
-	prisoners = Pr.objects.all()
+	is_police = False
+	is_neither = False
+
+	if request.user.groups.exists():
+		if 'Police' == request.user.groups.all()[0].name: # Assuming user is only in one group
+			is_police = True
+	else:
+		is_neither = True
+
 	return render(
 		request, 
 		"prison/index.html", 
-		{
-			'new_prisoners_list': Pr.objects.order_by('start_date')[:10]
-		}
-	)
+		{'is_police': is_police, 'is_neither': is_neither}
+		)
+	
+@my_login_required
+@allowed_users(['Police'])
+def plainshow(request):
+	prisoners = Pr.objects.all()
+	return render(
+		request, 
+		"prison/plainshow.html", 
+		{'prisoners': prisoners}
+		)
 
 @my_login_required
 @allowed_users(['DataManager'])

@@ -1,12 +1,23 @@
-{% if new_prisoners_list %}
-<ul> {% for p in new_prisoners_list %}
-	<li><a href="{% url 'Index' %}">
-		{{p.name}}, {{p.start_date}}
-	</a></li>
-	{% endfor %}
-</ul>
-
+<head>
+	<title>Home</title>
+	<header style="border-style: none; position:fixed; top: 10px; right: 10px;">
+		Logged in as {{ user }}. <a href="/accounts/logout">Logout here.</a>
+	</header>
+</head>
+<body>
+{% if is_neither == True %}
+	<p>
+		Only data managers and police officers are allowed to access this system.<br>
+		Please contact the superuser to gain access if you are eligible.
+	</p>
+{% elif is_police == True %}
+	<ul>
+	<li> <a href="/prison/plainshow">View Prisoners</a> </li>
+	</ul>
 {% else %}
-	<p>No prisoners currently in prison.</p>
-
+	<ul>
+	<li> <a href="/prison/show">View Prisoners</a> </li>
+	<li> <a href="/prison/insert">Insert Prisoner</a> </li>
+	</ul>
 {% endif %}
+</body>

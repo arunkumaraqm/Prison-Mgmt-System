@@ -1,12 +1,15 @@
 <head>  
     <meta charset="UTF-8">  
-    <title>Edit prisoner</title>  
+    <title>Edit prisoner</title>  	
+    <header style="border-style: none; position:fixed; top: 10px; right: 10px;">
+		Logged in as {{ user }}. <a href="/accounts/logout">Logout here.</a>
+	</header>
 </head>  
 
 <body>  
-<form method="POST">
-    {% csrf_token %}  
-    {{ form.as_p }}
-    <input type="submit" value="Submit">
-</form>  
+	<form method="POST">
+	    {% csrf_token %}  
+	    {{ form.as_p }}
+	    <input type="submit" value="Submit">
+	</form>  
 </body>  
