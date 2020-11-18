@@ -10,11 +10,17 @@
 		<tr>
 			<th>Name</th>
 			<th>Start Date</th>
+			<th>Visitors</th>
 		</tr>
 		{% for prisoner in prisoners %}
 		<tr>
 			<td>{{prisoner.name}}</td>
 			<td>{{prisoner.start_date}}</td>
+			<td>
+				<a href="/prison/{{ prisoner.id }}/visitor">
+					Visitors
+				</a>
+			</td>
 		</tr>
 		{% endfor %}
 		</table>

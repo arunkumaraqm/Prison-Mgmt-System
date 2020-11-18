@@ -12,6 +12,7 @@
 			<th>Start Date</th>
 			<th>Edit</th>
 			<th>Destroy</th>
+			<th>Visitors</th>
 		</tr>
 		{% for prisoner in prisoners %}
 		<tr>
@@ -25,6 +26,11 @@
 			<td>
 				<a href="/prison/destroy/{{ prisoner.id }}">
 					Destroy
+				</a>
+			</td>
+			<td>
+				<a href="/prison/{{ prisoner.id }}/visitor">
+					Visitors
 				</a>
 			</td>
 		</tr>

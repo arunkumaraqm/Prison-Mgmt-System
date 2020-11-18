@@ -1,9 +1,9 @@
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.views import generic
 from django.urls import reverse
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Prisoner as Pr
-from .forms import PrisonerForm
+from .models import Prisoner as Pr, Visitor
+from .forms import *
 from accounts.decorators import my_login_required, allowed_users
 
 @my_login_required
@@ -78,7 +78,6 @@ def edit(request, id):
 	form = PrisonerForm(request.POST or None, instance = prisoner)
 
 	if request.method == "POST":
-		print("LOG: ", prisoner.start_date)
 		if form.is_valid():
 			form.save() 
 			return redirect(show)
@@ -87,7 +86,74 @@ def edit(request, id):
 		request,
 		'prison/edit.html',
 		{'prisoner': prisoner, 'form': form}
-		)
+	)
+
+
+@my_login_required
+@allowed_users(['Police', 'DataManager'])
+def show_visitors(request, id):
+	# If you go to the url /prison/destroy/10, then
+	# the prisoner with id 10 will be deleted
+	# and you will be redirected to /prison/show
+	prisoner = get_object_or_404(Pr, id=id)
+	visitors = prisoner.visitor_set.all()
+
+	# TODO remove "Remove" link from show_visitors.html for police user
+	return render(
+		request,
+		'prison/show_visitors.html',
+		{'prisoner': prisoner, 'visitors': visitors}
+	)
+
+	
+@my_login_required
+@allowed_users(['DataManager'])
+def insert_visitor_to_prisoner(request, prisoner_id):
+	prisoner = get_object_or_404(Pr, id=prisoner_id)
+
+	form = VisitorForm(request.POST or None)
+
+	if request.method == "POST":
+		if form.is_valid():
+			form.save() 
+			return redirect(show)
+
+	return render(
+		request,
+		'prison/edit.html',
+		{'prisoner': prisoner, 'form': form}
+	)
+
+
+	
+	# Dissociate visitor and prisoner
+	visitor.associated_prisoners.remove(prisoner)
+	visitor.save()
+
+	# Delete visitor if visitor is not connected to any prisoner
+	if not visitor.associated_prisoners.all():
+		visitor.delete()
+
+	return HttpResponseRedirect(f'/prison/{prisoner_id}/visitor/')
+	
+@my_login_required
+@allowed_users(['DataManager'])
+def remove_visitor_from_prisoner(request, prisoner_id, visitor_id):
+	prisoner = get_object_or_404(Pr, id=prisoner_id)
+	try:
+		visitor = prisoner.visitor_set.get(visitor_id = visitor_id)
+	except Visitor.DoesNotExist:
+		raise Http404("Visitor and prisoner did not match.")
+	
+	# Dissociate visitor and prisoner
+	visitor.associated_prisoners.remove(prisoner)
+	visitor.save()
+
+	# Delete visitor if visitor is not connected to any prisoner
+	if not visitor.associated_prisoners.all():
+		visitor.delete()
+
+	return HttpResponseRedirect(f'/prison/{prisoner_id}/visitor/')
 
 # class DetailView(generic.DetailView):
 # 	model = Pr

@@ -1,0 +1,31 @@
+<head>
+	<title>Visitors for Prisoner {{prisoner}}</title>
+	<header style="border-style: none; position:fixed; top: 10px; right: 10px;">
+		Logged in as {{ user }}. <a href="/accounts/logout">Logout here.</a>
+	</header>
+</head>
+<body>
+	{% if visitors %}
+		<h3>Visitors for Prisoner {{prisoner}}:</h3>
+		<table>
+		<tr>
+			<th>Visitor ID</th>
+			<th>Visitor Name</th>
+			<th>Visitor Type</th>
+			<th>Remove</th>
+		</tr>
+		{% for visitor in visitors %}
+		<tr>
+			<td>{{visitor.visitor_id}}</td>
+			<td>{{visitor.visitor_name}}</td>
+			<td>{{visitor.get_visitor_type_display}}</td>
+			<td><a href="/prison/{{ prisoner.id }}/visitor/{{ visitor.visitor_id }}/remove"</a>Remove</td>
+		</tr>
+		{% endfor %}
+		</table>
+	{% else %}
+		<p>The prisoner, {{prisoner}}, has no visitors currently.</p>
+	{% endif %}
+	<br>
+	<p><a href="/prison/{{ prisoner.id }}/visitor/insert">Insert new visitor.</a></p>
+</body>
