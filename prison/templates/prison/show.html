@@ -10,14 +10,17 @@
 		<tr>
 			<th>Name</th>
 			<th>Start Date</th>
+			{% if is_datamanager %}
 			<th>Edit</th>
 			<th>Destroy</th>
+			{% endif %}
 			<th>Visitors</th>
 		</tr>
 		{% for prisoner in prisoners %}
 		<tr>
 			<td>{{prisoner.name}}</td>
 			<td>{{prisoner.start_date}}</td>
+			{% if is_datamanager %}
 			<td>
 				<a href="/prison/edit/{{ prisoner.id }}">
 					Edit
@@ -28,6 +31,7 @@
 					Destroy
 				</a>
 			</td>
+			{% endif %}
 			<td>
 				<a href="/prison/{{ prisoner.id }}/visitor">
 					Visitors

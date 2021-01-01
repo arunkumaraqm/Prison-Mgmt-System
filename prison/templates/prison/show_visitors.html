@@ -12,14 +12,19 @@
 			<th>Visitor ID</th>
 			<th>Visitor Name</th>
 			<th>Visitor Type</th>
-			<th>Remove</th>
+			{% if is_datamanager %}
+				<th>Remove</th>
+			{% endif %}
 		</tr>
 		{% for visitor in visitors %}
 		<tr>
 			<td>{{visitor.visitor_id}}</td>
 			<td>{{visitor.visitor_name}}</td>
 			<td>{{visitor.get_visitor_type_display}}</td>
-			<td><a href="/prison/{{ prisoner.id }}/visitor/{{ visitor.visitor_id }}/remove"</a>Remove</td>
+			{% if is_datamanager %}
+				<td><a href="/prison/{{ prisoner.id }}/visitor/{{ visitor.visitor_id }}/remove"</a>Remove</td>
+			{% endif %}
+
 		</tr>
 		{% endfor %}
 		</table>
@@ -27,5 +32,8 @@
 		<p>The prisoner, {{prisoner}}, has no visitors currently.</p>
 	{% endif %}
 	<br>
-	<p><a href="/prison/{{ prisoner.id }}/visitor/insert">Insert new visitor.</a></p>
+	{% if is_datamanager %}
+		<p><a href="/prison/{{ prisoner.id }}/visitor/insert">Insert new visitor.</a></p>
+	{% endif %}
+
 </body>

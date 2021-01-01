@@ -31,6 +31,8 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'django_extensions',#
+    'widget_tweaks',
     'prison.apps.PrisonConfig',
     'accounts.apps.AccountsConfig',
     'django.contrib.admin',
