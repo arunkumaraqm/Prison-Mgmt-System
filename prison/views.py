@@ -55,14 +55,19 @@ def insert(request):
 @my_login_required
 @allowed_users(['DataManager'])
 def destroy(request, prisoner_id):
-	# If you go to the url /prison/destroy/10, then
-	# the prisoner with id 10 will be deleted
-	# and you will be redirected to /prison/show
 	prisoner = get_object_or_404(Pr, id=prisoner_id)
-	prisoner.delete()
-	#TODO Confirm delete
-	#TODO Remove visitors from the prisoner before deleting prisoner
-	return redirect('prison:show')
+
+	if request.method == 'GET':
+		return render(
+			request,
+			'prison/delete.html',
+			{'prisoner': prisoner}
+			)
+	elif request.method == 'POST':
+		prisoner.delete()
+		#TODO Confirm delete
+		#TODO Remove visitors from the prisoner before deleting prisoner
+		return redirect('prison:show')
 
 @my_login_required
 @allowed_users(['DataManager'])
@@ -139,7 +144,6 @@ def remove_visitor_from_prisoner(request, prisoner_id, visitor_id):
 	dissociate both of them and delete the visitor if they do not visit any more prisoners.
 	'''
 
-	print("LOG here")
 	prisoner = get_object_or_404(Pr, id=prisoner_id)
 
 	# In case visitor doesn't actually visit the prisoner
@@ -148,13 +152,20 @@ def remove_visitor_from_prisoner(request, prisoner_id, visitor_id):
 	except Visitor.DoesNotExist:
 		raise Http404('Visitor and prisoner did not match.')
 	
-	# Dissociate visitor and prisoner
-	visitor.associated_prisoners.remove(prisoner)
-	visitor.save()
+	if request.method == 'GET':
+		return render(
+			request,
+			'prison/remove_visitor_from_prisoner.html',
+			{'prisoner':prisoner, 'visitor':visitor,}
+			)
+	elif request.method == 'POST':
+		# Dissociate visitor and prisoner
+		visitor.associated_prisoners.remove(prisoner)
+		visitor.save()
 
-	# Delete visitor if visitor is not connected to any prisoner
-	if not visitor.associated_prisoners.all():
-		visitor.delete()
+		# Delete visitor if visitor is not connected to any prisoner
+		if not visitor.associated_prisoners.all():
+			visitor.delete()
 
-	# return HttpResponseRedirect(reverse('prison:visitors', prisoner_id))
-	return redirect('prison:visitors', prisoner_id)
+		# return HttpResponseRedirect(reverse('prison:visitors', prisoner_id))
+		return redirect('prison:visitors', prisoner_id)
