@@ -1,6 +1,4 @@
-from django.http import HttpResponse, HttpResponseRedirect, Http404
-from django.views import generic
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Prisoner as Pr, Visitor
 from .forms import *
@@ -46,7 +44,7 @@ def insert(request):
 		form = PrisonerForm(request.POST)
 		if form.is_valid():
 			form.save() 
-			return redirect(show)
+			return redirect('prison:show')
 
 	return render(
 		request,
@@ -56,24 +54,26 @@ def insert(request):
 
 @my_login_required
 @allowed_users(['DataManager'])
-def destroy(request, id):
+def destroy(request, prisoner_id):
 	# If you go to the url /prison/destroy/10, then
 	# the prisoner with id 10 will be deleted
 	# and you will be redirected to /prison/show
-	prisoner = get_object_or_404(Pr, id=id)
+	prisoner = get_object_or_404(Pr, id=prisoner_id)
 	prisoner.delete()
-	return redirect(show)
+	#TODO Confirm delete
+	#TODO Remove visitors from the prisoner before deleting prisoner
+	return redirect('prison:show')
 
 @my_login_required
 @allowed_users(['DataManager'])
-def edit(request, id):
-	prisoner = get_object_or_404(Pr, id=id)
+def edit(request, prisoner_id):
+	prisoner = get_object_or_404(Pr, id=prisoner_id)
 	form = PrisonerForm(request.POST or None, instance = prisoner)
 
 	if request.method == 'POST':
 		if form.is_valid():
 			form.save() 
-			return redirect(show)
+			return redirect('prison:show')
 
 	return render(
 		request,
@@ -84,14 +84,14 @@ def edit(request, id):
 
 @my_login_required
 @allowed_users(['Police', 'DataManager'])
-def show_visitors(request, id):
+def show_visitors(request, prisoner_id):
 	'''
 	If you go to the url /prison/destroy/10, then
 	the prisoner with id 10 will be deleted
 	and you will be redirected to /prison/show
 	'''
 
-	prisoner = get_object_or_404(Pr, id=id)
+	prisoner = get_object_or_404(Pr, id=prisoner_id)
 	visitors = prisoner.visitor_set.all()
 
 	is_datamanager = (request.user.groups.all()[0].name == 'DataManager')
@@ -109,17 +109,26 @@ def insert_visitor_to_prisoner(request, prisoner_id):
 
 	prisoner = get_object_or_404(Pr, id=prisoner_id)
 
-	form = VisitorForm(request.POST or None)
-
+	inapplicable_visitors = prisoner.visitor_set.all()
+	applicable_visitors = Visitor.objects.exclude(visitor_id__in=inapplicable_visitors)
+	ev_form = ExistingVisitorForm(applicable_visitors, request.POST or None)
+	
+	nv_form = NewVisitorForm(request.POST or None)
+	
 	if request.method == 'POST':
-		if form.is_valid():
-			form.save() 
-			return redirect(show)
+		if ev_form.is_valid():
+			visitor = ev_form.cleaned_data['visitor']
+			visitor.associated_prisoners.add(prisoner)
+			visitor.save()
+		elif nv_form.is_valid():
+			nv_form.save(commit=True, default_associated_prisoner=prisoner)
+			
+		return redirect('prison:visitors', prisoner_id)
 
 	return render(
 		request,
-		'prison/edit.html',
-		{'prisoner': prisoner, 'form': form}
+		'prison/insert_visitor_to_prisoner.html',
+		{'prisoner': prisoner, 'ev_form': ev_form, 'nv_form': nv_form}
 	)
 	
 @my_login_required
@@ -130,11 +139,12 @@ def remove_visitor_from_prisoner(request, prisoner_id, visitor_id):
 	dissociate both of them and delete the visitor if they do not visit any more prisoners.
 	'''
 
+	print("LOG here")
 	prisoner = get_object_or_404(Pr, id=prisoner_id)
 
 	# In case visitor doesn't actually visit the prisoner
 	try:
-		visitor = prisoner.visitor_set.get(visitor_id = visitor_id)
+		visitor = prisoner.visitor_set.get(visitor_id=visitor_id)
 	except Visitor.DoesNotExist:
 		raise Http404('Visitor and prisoner did not match.')
 	
@@ -146,4 +156,5 @@ def remove_visitor_from_prisoner(request, prisoner_id, visitor_id):
 	if not visitor.associated_prisoners.all():
 		visitor.delete()
 
-	return HttpResponseRedirect(f'/prison/{prisoner_id}/visitor/')
+	# return HttpResponseRedirect(reverse('prison:visitors', prisoner_id))
+	return redirect('prison:visitors', prisoner_id)

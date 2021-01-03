@@ -22,18 +22,18 @@
 			<td>{{prisoner.start_date}}</td>
 			{% if is_datamanager %}
 			<td>
-				<a href="/prison/edit/{{ prisoner.id }}">
+				<a href="{% url 'prison:edit' prisoner.id %}">
 					Edit
 				</a>
 			</td>
 			<td>
-				<a href="/prison/destroy/{{ prisoner.id }}">
+				<a href="{% url 'prison:destroy' prisoner.id %}">
 					Destroy
 				</a>
 			</td>
 			{% endif %}
 			<td>
-				<a href="/prison/{{ prisoner.id }}/visitor">
+				<a href="{% url 'prison:visitors' prisoner.id %}">
 					Visitors
 				</a>
 			</td>

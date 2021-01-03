@@ -12,12 +12,12 @@
 	</p>
 {% elif is_police == True %}
 	<ul>
-	<li> <a href="/prison/show">View Prisoners</a> </li>
+	<li> <a href="{% url 'prison:show' %}">View Prisoners</a> </li>
 	</ul>
 {% else %}
 	<ul>
-	<li> <a href="/prison/show">View Prisoners</a> </li>
-	<li> <a href="/prison/insert">Insert Prisoner</a> </li>
+	<li> <a href="{% url 'prison:show' %}">View Prisoners</a> </li>
+	<li> <a href="{% url 'prison:insert' %}">Insert Prisoner</a> </li>
 	</ul>
 {% endif %}
 </body>

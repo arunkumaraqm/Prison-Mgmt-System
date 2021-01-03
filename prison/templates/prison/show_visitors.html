@@ -22,7 +22,7 @@
 			<td>{{visitor.visitor_name}}</td>
 			<td>{{visitor.get_visitor_type_display}}</td>
 			{% if is_datamanager %}
-				<td><a href="/prison/{{ prisoner.id }}/visitor/{{ visitor.visitor_id }}/remove"</a>Remove</td>
+				<td><a href="{% url 'prison:remove_visitor_from_prisoner' prisoner.id visitor.visitor_id %}"</a>Remove</td>
 			{% endif %}
 
 		</tr>
@@ -33,7 +33,7 @@
 	{% endif %}
 	<br>
 	{% if is_datamanager %}
-		<p><a href="/prison/{{ prisoner.id }}/visitor/insert">Insert new visitor.</a></p>
+		<p><a href="{% url 'prison:insert_visitor_to_prisoner' prisoner.id %}">Insert new visitor.</a></p>
 	{% endif %}
 
 </body>

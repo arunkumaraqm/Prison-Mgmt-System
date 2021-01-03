@@ -10,9 +10,9 @@ class Prisoner(models.Model):
 		return self.name
 
 class Visitor(models.Model):
-	visitor_id = models.IntegerField(primary_key=True)
+	visitor_id = models.AutoField(primary_key=True)
 	visitor_name = models.CharField(max_length = 100)
-	associated_prisoners = models.ManyToManyField(Prisoner)
+	associated_prisoners = models.ManyToManyField('prison.Prisoner')
 
 	TYPES_OF_VISITORS = {
 		('L', 'Lawyer'),
@@ -23,8 +23,8 @@ class Visitor(models.Model):
 		max_length = 1, 
 		choices = TYPES_OF_VISITORS,
 		default = 'O'
-		)
+		) # Move this field to through
 
 	def __str__(self): 
-		return self.visitor_name
+		return f'{self.visitor_id}: {self.visitor_name}'
 
