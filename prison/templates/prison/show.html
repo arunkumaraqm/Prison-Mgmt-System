@@ -1,13 +1,13 @@
-<head>
-	<title>Prisoner records</title>
-	<header style="border-style: none; position:fixed; top: 10px; right: 10px;">
-		Logged in as {{ user }}. <a href="/accounts/logout">Logout here.</a>
-	</header>
-</head>
-<body>
-	{% if prisoners %}
+{% extends "base.html" %}
+{% block title %}
+	Prisoner Records
+{% endblock title %}	
+{% block content %}
+	<h3>List of Prisoners in Database:</h3>
+		{% if prisoners %}
 		<table>
 		<tr>
+			<th>Sno.</th>
 			<th>Name</th>
 			<th>Start Date</th>
 			{% if is_datamanager %}
@@ -18,6 +18,7 @@
 		</tr>
 		{% for prisoner in prisoners %}
 		<tr>
+			<td>{{forloop.counter}}</td>
 			<td>{{prisoner.name}}</td>
 			<td>{{prisoner.start_date}}</td>
 			{% if is_datamanager %}
@@ -43,4 +44,7 @@
 	{% else %}
 		<p>No prisoners currently.</p>
 	{% endif %}
-</body>
+	<p><a href="{% url 'prison:home' %}">Back to homepage.</a></p>
+
+
+{% endblock content %}

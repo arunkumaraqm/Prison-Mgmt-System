@@ -1,14 +1,17 @@
-<head>  
-    <title>Insert Prisoner</title>  
-	<header style="border-style: none; position:fixed; top: 10px; right: 10px;">
-		Logged in as {{ user }}. <a href="/accounts/logout">Logout here.</a>
-	</header>
+{% extends "base.html" %}
+{% block title %}
+	Insert Prisoner
+{% endblock title %}
 
-</head>   
-<body>  
-<form method="POST" class="post-form" action="insert">  
-    {% csrf_token %}  
-    {{form.as_p}}
-    <input type="submit" value="Submit">
-</form>  
-</body>
+{% block content %}
+	<h3>Insert Prisoner</h3>
+	<form method="POST" class="post-form" action="insert">  
+	    {% csrf_token %}  
+	    {{form.as_p}}
+	    <input type="submit" value="Submit">
+	    <br><br>
+	</form>  
+
+	<p><a href="{% url 'prison:home' %}">Back to homepage.</a></p>
+
+{% endblock content %}

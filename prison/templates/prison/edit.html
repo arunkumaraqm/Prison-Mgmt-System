@@ -1,15 +1,16 @@
-<head>  
-    <meta charset="UTF-8">  
-    <title>Edit prisoner</title>  	
-    <header style="border-style: none; position:fixed; top: 10px; right: 10px;">
-		Logged in as {{ user }}. <a href="/accounts/logout">Logout here.</a>
-	</header>
-</head>  
+{% extends "base.html" %}
+{% block title %}
+	Edit Prisoner
+{% endblock title %}
 
-<body>  
+{% block content %}
+<h3>Edit Prisoner {{ prisoner }}</h3>
 	<form method="POST">
 	    {% csrf_token %}  
 	    {{ form.as_p }}
 	    <input type="submit" value="Submit">
+	    <br><br>
 	</form>  
-</body>  
+
+	<p><a href="{% url 'prison:show' %}">Back to list of prisoners.</a></p>
+{% endblock content %}

@@ -1,21 +1,21 @@
-<head>  
-    <title>Insert Visitor</title>  
-	<header style="border-style: none; position:fixed; top: 10px; right: 10px;">
-		Logged in as {{ user }}. <a href="/accounts/logout">Logout here.</a>
-	</header>
+{% extends "base.html" %}
 
-</head>   
-<body>  
-<p>Create a new visitor and add them to this prisoner:</p>
-<form method="POST" class="post-form" action="insert" id="new-visitor-form">  
-    {% csrf_token %}  
- 	{{nv_form.as_p}}
-    <input type="submit" value="Submit" form="new-visitor-form">
-</form>  
-<p>OR choose from a visitor in the database:</p>
-<form method="POST" class="post-form" action="insert" id="existing-visitor-form">  
-    {% csrf_token %}  
-    {{ev_form.as_p}}
-    <input type="submit" value="Submit" form="existing-visitor-form">
-</form>  
-</body>
+{% block title %}
+	Insert Visitor
+{% endblock title %}
+{% block content %}
+	<h3>Insert Visitor to Prisoner {{ prisoner }}</h3>
+	<h4>Create a new visitor and add them to this prisoner:</h4>
+	<form method="POST" class="post-form" action="insert" id="new-visitor-form">  
+	    {% csrf_token %}  
+	 	{{nv_form.as_p}}
+	    <input type="submit" value="Submit" form="new-visitor-form">
+	</form>  
+	<br><br>
+	<h4>OR choose from a visitor in the database:</h4>
+	<form method="POST" class="post-form" action="insert" id="existing-visitor-form">  
+	    {% csrf_token %}  
+	    {{ev_form.as_p}}
+	    <input type="submit" value="Submit" form="existing-visitor-form">
+	</form>  
+{% endblock content %}

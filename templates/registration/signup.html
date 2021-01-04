@@ -1,8 +1,15 @@
 <!-- templates/registration/signup.html -->
 {% extends "base.html" %}
 {% block title %}
-	signup
+	Signup
 {% endblock title %}
+{% block head %}
+	
+{% endblock head %}
+
+{% block form_style %}
+	
+{% endblock form_style %}
 
 {% block content %}		
 	<h2>Signup Page</h2>
@@ -11,5 +18,5 @@
 		{{ form.as_p }}
 		<button type="submit">Register</button>
 	</form>
-	<p>If you have an account, login <a href="/accounts/login">here</a>.</p>
+	<p>If you have an account, login <a href="{% url 'login' %}">here</a>.</p>
 {% endblock content %}

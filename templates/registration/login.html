@@ -3,7 +3,12 @@
 {% block title %}
 	Login
 {% endblock title %}
-
+{% block head %}
+	
+{% endblock head %}
+{% block form_style %}
+	
+{% endblock form_style %}
 {% block content %}		
 	<h2>Login Page</h2>
 	<form method="post">
@@ -11,5 +16,5 @@
 		{{ form.as_p }}
 		<button type="submit">Login</button>
 	</form>
-	<p>If you do not have an account, register <a href="/accounts/signup">here</a>.</p>
+	<p>If you do not have an account, register <a href="{% url 'signup' %}">here</a>.</p>
 {% endblock content %}

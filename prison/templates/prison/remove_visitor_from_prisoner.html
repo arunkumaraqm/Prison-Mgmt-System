@@ -1,15 +1,19 @@
-<head>  
-    <title>Confirm Visitor Removal</title>  
-	<header style="border-style: none; position:fixed; top: 10px; right: 10px;">
-		Logged in as {{ user }}. <a href="/accounts/logout">Logout here.</a>
-	</header>
+{% extends "base.html" %}
+{% block title %}
+	Confirm Visitor Removal
+{% endblock title %}
 
-</head>   
-<body>  
-<p>Are you sure you want to remove "{{ visitor }}" from {{ prisoner }}?</p>
-<form method="POST" class="post-form">  
-    {% csrf_token %}
-    <input type="submit" value="Yes">
-    <input type="submit" value="Cancel" onclick="window.location='{% url 'prison:visitors' prisoner.id %}' ; return false;" >
-</form>  
-</body>
+{% block form_style %}
+	
+{% endblock form_style %}
+
+{% block content %}
+	<h3>Confirm Visitor Removal</h3>
+	<p>Are you sure you want to remove "{{ visitor }}" from {{ prisoner }}?</p>
+	<form method="POST" class="post-form">  
+	    {% csrf_token %}
+	    <input type="submit" value="Yes">
+	    <input type="submit" value="Cancel" onclick="window.location='{% url 'prison:visitors' prisoner.id %}' ; return false;" >
+	</form>  
+
+{% endblock content %}

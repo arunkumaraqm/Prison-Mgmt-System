@@ -1,15 +1,19 @@
-<head>  
-    <title>Confirm Delete</title>  
-	<header style="border-style: none; position:fixed; top: 10px; right: 10px;">
-		Logged in as {{ user }}. <a href="/accounts/logout">Logout here.</a>
-	</header>
+{% extends "base.html" %}
+{% block title %}
+	Confirm Delete
+{% endblock title %}
 
-</head>   
-<body>  
+{% block form_style %}
+	
+{% endblock form_style %}
+
+{% block content %}
+<h3>Confirm Delete</h3>
 <p>Are you sure you want to delete {{ prisoner }}?</p>
 <form method="POST" class="post-form">  
     {% csrf_token %}
     <input type="submit" value="Yes">
     <input type="submit" value="Cancel" onclick="window.location='{% url 'prison:show' %}' ; return false;" >
 </form>  
-</body>
+	
+{% endblock content %}

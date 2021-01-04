@@ -1,23 +1,23 @@
-<head>
-	<title>Visitors for Prisoner {{prisoner}}</title>
-	<header style="border-style: none; position:fixed; top: 10px; right: 10px;">
-		Logged in as {{ user }}. <a href="/accounts/logout">Logout here.</a>
-	</header>
-</head>
-<body>
-	{% if visitors %}
-		<h3>Visitors for Prisoner {{prisoner}}:</h3>
+{% extends "base.html" %}
+{% block title %}
+	Visitors for Prisoner {{prisoner}}
+{% endblock title %}
+{% block content %}
+	<h3>Visitors for Prisoner {{prisoner}}:</h3>
+		{% if visitors %}
 		<table>
 		<tr>
-			<th>Visitor ID</th>
-			<th>Visitor Name</th>
-			<th>Visitor Type</th>
+			<th>Sno.</th>
+			<th>ID</th>
+			<th>Name</th>
+			<th>Type</th>
 			{% if is_datamanager %}
 				<th>Remove</th>
 			{% endif %}
 		</tr>
 		{% for visitor in visitors %}
 		<tr>
+			<td>{{forloop.counter}}</td>
 			<td>{{visitor.visitor_id}}</td>
 			<td>{{visitor.visitor_name}}</td>
 			<td>{{visitor.get_visitor_type_display}}</td>
@@ -35,5 +35,6 @@
 	{% if is_datamanager %}
 		<p><a href="{% url 'prison:insert_visitor_to_prisoner' prisoner.id %}">Insert new visitor.</a></p>
 	{% endif %}
+	<p><a href="{% url 'prison:show' %}">Back to list of prisoners.</a></p>
 
-</body>
+{% endblock content %}
